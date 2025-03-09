@@ -14,4 +14,11 @@ Per tal motivo, in questo progetto sarà configurato un server Matrix tale che:
 - **Sia facilmente accessibile da remoto**: usando un reverse proxy è possibile associare un nome di dominio all’istanza attraverso il quale poter accedere da un client qualsiasi.
 - **Possa comunicare con servizi di messagistica terzi**: Matrix supporta un gran numero di [**bridges**](https://matrix.org/ecosystem/bridges/) capaci di farci interagire con utenti di piattaforme proprietarie come **Whatsapp** e **Telegram** (risolvendo uno dei più grandi scogli che spesso una ha nel passaggio verso una nuova piattaforma).
 
-Per garantire la portabilità del progetto, dati i suoi numerosi componenti interdipendenti, il tutto sarà realizzato puramente tramite l’uso di **docker** (e definito attraverso un singolo file compose) e la modifica apposita di specifici file di configurazione a cui i container saranno mappati.
+## Caso d'uso
+
+Tramite la configurazione di più componenti:
+- Application Proxy con **Traefik** per l'accesso remoto.
+- Server Matrix con **Synapse**.
+- Reverse Proxy con **Nginx** per la federazione.
+- TURN Server con **Coturn**.
+ho quindi creato un'istanza server https://matrix.pakisrv.com, accessibile da client nativi quali Element ed Element X o dal client https://chat.pakisrv.com.
