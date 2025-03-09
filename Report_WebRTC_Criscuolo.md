@@ -78,7 +78,7 @@ services:
     - --serversTransport.insecureSkipVerify=true      
     - --global.sendAnonymousUsage=false    
     volumes:
-		- '/var/run/docker.sock:/var/run/docker.sock:ro'      
+	- '/var/run/docker.sock:/var/run/docker.sock:ro'      
       	- './data/traefik/acme:/etc/traefik/acme'
     restart: always    
     ports:      
