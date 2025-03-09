@@ -53,40 +53,40 @@ networks:
 
 services:
   traefik:    
-	  image: traefik:latest    
-	  container_name: traefik    
-	  networks:      
-		  - matrix
-	  command:
-	    - --providers.docker=true      
-	    - --providers.docker.exposedByDefault=false      
-	    - --accessLog=true      
-	    - --api.insecure=true      
-	    - --entryPoints.web.address=:80      
-	    - --entryPoints.websecure.address=:443      
-	    - --entryPoints.web.forwardedHeaders.trustedIPs=173.245.48.0/20,103.21.244.0/22,103.22.200.0/22,103.31.4.0/22,141.101.64.0/18,108.162.192.0/18,190.93.240.0/20,188.114.96.0/20,197.234.240.0/22,198.41.128.0/17,162.158.0.0/15,104.16.0.0/13,104.24.0.0/14,172.64.0.0/13,131.0.72.0/22      
-	    - --entryPoints.websecure.forwardedHeaders.trustedIPs=173.245.48.0/20,103.21.244.0/22,103.22.200.0/22,103.31.4.0/22,141.101.64.0/18,108.162.192.0/18,190.93.240.0/20,188.114.96.0/20,197.234.240.0/22,198.41.128.0/17,162.158.0.0/15,104.16.0.0/13,104.24.0.0/14,172.64.0.0/13,131.0.72.0/22      
-	    - --entryPoints.web.http.redirections.entryPoint.to=websecure      
-	    - --entryPoints.web.http.redirections.entryPoint.scheme=https      
-	    - --certificatesResolvers.letsencrypt.acme.dnsChallenge=true      
-	    - --certificatesResolvers.letsencrypt.acme.dnsChallenge.provider=cloudflare      
-	    - --certificatesResolvers.letsencrypt.acme.email=${INSERIRE_EMAIL}      
-	    - --certificatesResolvers.letsencrypt.acme.storage=/etc/traefik/acme/acme.json      
-	    - --entryPoints.websecure.http.tls.certResolver=letsencrypt      
-	    - --entryPoints.websecure.http.tls.domains[0].main=${NOME_DOMINIO}      
-	    - --entryPoints.websecure.http.tls.domains[0].sans=*.${NOME_DOMINIO}      
-	    - --serversTransport.insecureSkipVerify=true      
-	    - --global.sendAnonymousUsage=false    
+  image: traefik:latest    
+  container_name: traefik    
+  networks:      
+      - matrix
+  command:
+    - --providers.docker=true      
+    - --providers.docker.exposedByDefault=false      
+    - --accessLog=true      
+    - --api.insecure=true      
+    - --entryPoints.web.address=:80      
+    - --entryPoints.websecure.address=:443      
+    - --entryPoints.web.forwardedHeaders.trustedIPs=173.245.48.0/20,103.21.244.0/22,103.22.200.0/22,103.31.4.0/22,141.101.64.0/18,108.162.192.0/18,190.93.240.0/20,188.114.96.0/20,197.234.240.0/22,198.41.128.0/17,162.158.0.0/15,104.16.0.0/13,104.24.0.0/14,172.64.0.0/13,131.0.72.0/22      
+    - --entryPoints.websecure.forwardedHeaders.trustedIPs=173.245.48.0/20,103.21.244.0/22,103.22.200.0/22,103.31.4.0/22,141.101.64.0/18,108.162.192.0/18,190.93.240.0/20,188.114.96.0/20,197.234.240.0/22,198.41.128.0/17,162.158.0.0/15,104.16.0.0/13,104.24.0.0/14,172.64.0.0/13,131.0.72.0/22      
+    - --entryPoints.web.http.redirections.entryPoint.to=websecure      
+    - --entryPoints.web.http.redirections.entryPoint.scheme=https      
+    - --certificatesResolvers.letsencrypt.acme.dnsChallenge=true      
+    - --certificatesResolvers.letsencrypt.acme.dnsChallenge.provider=cloudflare      
+    - --certificatesResolvers.letsencrypt.acme.email=${INSERIRE_EMAIL}      
+    - --certificatesResolvers.letsencrypt.acme.storage=/etc/traefik/acme/acme.json      
+    - --entryPoints.websecure.http.tls.certResolver=letsencrypt      
+    - --entryPoints.websecure.http.tls.domains[0].main=${NOME_DOMINIO}      
+    - --entryPoints.websecure.http.tls.domains[0].sans=*.${NOME_DOMINIO}      
+    - --serversTransport.insecureSkipVerify=true      
+    - --global.sendAnonymousUsage=false    
 		volumes:      
 			- '/var/run/docker.sock:/var/run/docker.sock:ro'      
 			- './data/traefik/acme:/etc/traefik/acme'
     restart: always    
     ports:      
-	    - "80:80"      
-	    - "443:443"      
+    - "80:80"      
+    - "443:443"      
     environment:      
-	    - CF_API_EMAIL=${INSERIRE_EMAIL}      
-	    - CF_API_KEY=${INSERIRE_CHIAVE_API}
+    - CF_API_EMAIL=${INSERIRE_EMAIL}      
+    - CF_API_KEY=${INSERIRE_CHIAVE_API}
 ```
 
 ## Fase 1: Server Matrix con Synapse
@@ -101,15 +101,15 @@ Inanzitutto, è necessario un database: creiamo quindi un’istanza di **Postgre
 
 ```yaml
   postgres:    
-	  container_name: 'postgres'    
-	  image: "postgres:11.4"        
-	  restart: "unless-stopped"    
-	  networks:      
-		  - matrix    
-	  environment:      
-	  POSTGRES_PASSWORD: "admin"    
-	  volumes:      
-		  - "./matrix/postgres/data:/var/lib/postgresql/data"
+  container_name: 'postgres'    
+  image: "postgres:11.4"        
+  restart: "unless-stopped"    
+  networks:      
+      - matrix    
+  environment:      
+  POSTGRES_PASSWORD: "admin"    
+  volumes:      
+      - "./matrix/postgres/data:/var/lib/postgresql/data"
 ```
 
 Dobbiamo però anche definire il database interno, in modo che sia accessibile dal server Synapse.
@@ -141,23 +141,23 @@ Passiamo adesso all’effettivo server Synapse, partendo dal container:
 
 ```yaml
   synapse:    
-	  container_name: 'synapse'    
-	  image: "matrixdotorg/synapse:latest"    
-	  restart: "unless-stopped"    
-	  networks:      
-		  - matrix          
-	  environment:      
-		  SYNAPSE_CONFIG_DIR: "/data"      
-		  SYNAPSE_CONFIG_PATH: "/data/homeserver.yaml"      
-	  volumes:      
-		  - "./matrix/synapse:/data"      
-		  - "./matrix/bridges:/bridges:rw"    
-	  labels:      
-		  - "traefik.enable=true"      
-		  - "traefik.http.services.synapse.loadbalancer.server.port=8008"      
-		  - "traefik.http.routers.synapse.rule=Host(`synapse.${NOME_DOMINIO}`)"      
-		  - "traefik.http.routers.synapse.entrypoints=websecure"      
-		  - "traefik.http.routers.synapse.tls.certresolver=letsencrypt"
+  container_name: 'synapse'    
+  image: "matrixdotorg/synapse:latest"    
+  restart: "unless-stopped"    
+  networks:      
+      - matrix          
+  environment:      
+      SYNAPSE_CONFIG_DIR: "/data"      
+      SYNAPSE_CONFIG_PATH: "/data/homeserver.yaml"      
+  volumes:      
+      - "./matrix/synapse:/data"      
+      - "./matrix/bridges:/bridges:rw"    
+  labels:      
+      - "traefik.enable=true"      
+      - "traefik.http.services.synapse.loadbalancer.server.port=8008"      
+      - "traefik.http.routers.synapse.rule=Host(`synapse.${NOME_DOMINIO}`)"      
+      - "traefik.http.routers.synapse.entrypoints=websecure"      
+      - "traefik.http.routers.synapse.tls.certresolver=letsencrypt"
 ```
 
 Si definisce un mapping a una cartella di configurazione: al suo interno serve definire la configurazione specifica in `./matrix/synapse/homeserver.yaml` in tal modo:
@@ -223,20 +223,20 @@ Adesso impostiamo il Reverse Proxy **Nginx**, anche qui si definisce il containe
 
 ```yaml
   nginx:    
-	  container_name: 'nginx'    
-	  image: "nginx:latest"    
-	  restart: "unless-stopped"    
-	  networks:      
-	  - matrix     
-	  volumes:      
-	  - "./matrix/nginx/matrix.conf:/etc/nginx/conf.d/matrix.conf"      
-	  - "./matrix/nginx/www:/var/www/"    
-	  labels:      
-	  - "traefik.enable=true"      
-	  - "traefik.http.services.matrix.loadbalancer.server.port=80"      
-	  - "traefik.http.routers.matrix.rule=Host(`matrix.${NOME_DOMINIO}`)"      
-	  - "traefik.http.routers.matrix.entrypoints=websecure"      
-	  - "traefik.http.routers.matrix.tls.certresolver=letsencrypt"
+  container_name: 'nginx'    
+  image: "nginx:latest"    
+  restart: "unless-stopped"    
+  networks:      
+  - matrix     
+  volumes:      
+  - "./matrix/nginx/matrix.conf:/etc/nginx/conf.d/matrix.conf"      
+  - "./matrix/nginx/www:/var/www/"    
+  labels:      
+  - "traefik.enable=true"      
+  - "traefik.http.services.matrix.loadbalancer.server.port=80"      
+  - "traefik.http.routers.matrix.rule=Host(`matrix.${NOME_DOMINIO}`)"      
+  - "traefik.http.routers.matrix.entrypoints=websecure"      
+  - "traefik.http.routers.matrix.tls.certresolver=letsencrypt"
 ```
 
 …e configuriamo internalmente in `./matrix/nginx/matrix.conf` :
@@ -254,9 +254,9 @@ server {
  }
 
   location /.well-known/matrix/ {    
-	  root /var/www/;    
-	  default_type application/json;    
-	  add_header Access-Control-Allow-Origin  *;  
+  root /var/www/;    
+  default_type application/json;    
+  add_header Access-Control-Allow-Origin  *;  
   }
 }
 ```
@@ -279,12 +279,12 @@ Creiamo quindi un’istanza
 
 ```yaml
   coturn:    
-	  image: "instrumentisto/coturn:latest"    
-	  container_name: 'coturn'    
-	  restart: "unless-stopped"    
-	  network_mode: "host"    
-	  volumes:      
-		  - "./matrix/coturn:/etc/coturn"
+  image: "instrumentisto/coturn:latest"    
+  container_name: 'coturn'    
+  restart: "unless-stopped"    
+  network_mode: "host"    
+  volumes:      
+      - "./matrix/coturn:/etc/coturn"
 ```
 
 Servirà anche definire il file di configurazione in `./data/coturn/turnserver.conf`, dopo aver creato un secret per l’autenticazione:
@@ -364,13 +364,13 @@ Ripetiamo il processo fatto con Whatsapp:
 
 ```yaml
   telegram:    
-	  container_name: telegram    
-	  image: dock.mau.dev/mautrix/telegram    
-	  restart: unless-stopped    
-	  networks:      
-		  - matrix    
-	  volumes:    
-		  - ./matrix/bridges/telegram:/data
+  container_name: telegram    
+  image: dock.mau.dev/mautrix/telegram    
+  restart: unless-stopped    
+  networks:      
+      - matrix    
+  volumes:    
+      - ./matrix/bridges/telegram:/data
 ```
 
 anche qui si avvia una volta con `docker compose create telegram` e modifichiamo il file `./matrix/bridges/telegram/config.yaml` allo stesso modo, includendo stavolta anche i codici API di Telegram:
@@ -439,15 +439,15 @@ Possiamo anche definire un semplice **WebClient Element** accessibile da browser
   image: "vectorim/element-web:latest"    
   restart: "unless-stopped"    
   networks:      
-	  - matrix    
+  - matrix    
   volumes:      
-	  - "./matrix/element/config.json:/app/config.json:ro"    
+  - "./matrix/element/config.json:/app/config.json:ro"    
   labels:      
-	  - "traefik.enable=true"      
-	  - "traefik.http.services.element.loadbalancer.server.port=80"      
-	  - "traefik.http.routers.element.rule=Host(`chat.${NOME_DOMINIO}`)"      
-	  - "traefik.http.routers.element.entrypoints=websecure"      
-	  - "traefik.http.routers.element.tls.certresolver=letsencrypt"
+  - "traefik.enable=true"      
+  - "traefik.http.services.element.loadbalancer.server.port=80"      
+  - "traefik.http.routers.element.rule=Host(`chat.${NOME_DOMINIO}`)"      
+  - "traefik.http.routers.element.entrypoints=websecure"      
+  - "traefik.http.routers.element.tls.certresolver=letsencrypt"
 ```
 
 avviamo una volta `docker compose create element`, sostituiamo la seguente opzione nel file `./matrix/element/config.json` e riavviamo con `docker compose restart element`:
