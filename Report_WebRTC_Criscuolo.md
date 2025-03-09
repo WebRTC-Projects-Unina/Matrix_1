@@ -337,7 +337,7 @@ whatsapp:
 		- ./matrix/bridges/whatsapp:/data
 ```
 
-e lo eseguiamo una sola volta, con `docker compose run whatsapp`, in modo da generare automaticamente il file `./matrix/bridges/whatsapp/config.yaml`.
+e lo eseguiamo una sola volta, con `docker compose create whatsapp`, in modo da generare automaticamente il file `./matrix/bridges/whatsapp/config.yaml`.
 
 Prendiamo tale file e sostituiamo questi parametri:
 
@@ -373,7 +373,7 @@ Ripetiamo il processo fatto con Whatsapp:
 		  - ./matrix/bridges/telegram:/data
 ```
 
-anche qui si avvia una volta con `docker compose run telegram` e modifichiamo il file `./matrix/bridges/telegram/config.yaml` allo stesso modo, includendo stavolta anche i codici API di Telegram:
+anche qui si avvia una volta con `docker compose create telegram` e modifichiamo il file `./matrix/bridges/telegram/config.yaml` allo stesso modo, includendo stavolta anche i codici API di Telegram:
 
 ```yaml
 homeserver:
@@ -450,7 +450,7 @@ Possiamo anche definire un semplice **WebClient Element** accessibile da browser
 	  - "traefik.http.routers.element.tls.certresolver=letsencrypt"
 ```
 
-avviamo una volta `docker compose build element`, sostituiamo la seguente opzione nel file `./matrix/element/config.json` e riavviamo con `docker compose restart element`:
+avviamo una volta `docker compose create element`, sostituiamo la seguente opzione nel file `./matrix/element/config.json` e riavviamo con `docker compose restart element`:
 
 ```json
 {    
