@@ -1,0 +1,46 @@
+web_client_location: https://$CLIENT_NAME.$MY_DOMAIN/ 
+public_baseurl: https://synapse.$MY_DOMAIN/
+enable_registration: true
+enable_registration_without_verification: true
+
+listeners:  
+- port: 8008    
+	tls: false    
+	type: http    
+	x_forwarded: true    
+	resources:      
+	- names: [client, federation]        
+		compress: false
+
+retention:  
+	enabled: true
+
+federation_ip_range_blacklist:
+  - '127.0.0.0/8'
+  - '10.0.0.0/8'  
+  - '172.16.0.0/12'  
+  - '192.168.0.0/16'  
+  - '100.64.0.0/10'  
+  - '169.254.0.0/16'  
+  - '::1/128'  
+  - 'fe80::/64'  
+  - 'fc00::/7'
+  
+database:  
+	name: psycopg2  
+	args:    
+		user: synapse    
+		password: INSERIRE_PASSWORD    
+		database: synapse    
+		host: matrix-postgres       
+		cp_min: 5    
+		cp_max: 10
+		
+app_service_config_files:  
+  /bridges/whatsapp/registration.yaml  
+	/bridges/telegram/registration.yaml
+	
+turn_uris: [ "turn:turn.NOME_DOMINIO?transport=udp", "turn:turn.NOME_DOMINIO?transport=tcp", "turns:turn.NOME_DOMINIO?transport=udp", "turns:turn.NOME_DOMINIO?transport=tcp" ]
+turn_shared_secret: "INSERIRE_SECRET"
+turn_user_lifetime: 86400000
+turn_allow_guests: True
