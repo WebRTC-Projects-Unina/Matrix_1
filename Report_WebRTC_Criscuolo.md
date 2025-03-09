@@ -78,8 +78,8 @@ services:
     - --serversTransport.insecureSkipVerify=true      
     - --global.sendAnonymousUsage=false    
     volumes:
-	- '/var/run/docker.sock:/var/run/docker.sock:ro'      
-      	- './data/traefik/acme:/etc/traefik/acme'
+      - '/var/run/docker.sock:/var/run/docker.sock:ro'
+      - './data/traefik/acme:/etc/traefik/acme'
     restart: always    
     ports:      
     - "80:80"      
@@ -105,11 +105,11 @@ postgres:
   image: "postgres:11.4"        
   restart: "unless-stopped"    
   networks:      
-      - matrix    
+    - matrix    
   environment:      
   POSTGRES_PASSWORD: "admin"    
   volumes:      
-      - "./matrix/postgres/data:/var/lib/postgresql/data"
+    - "./matrix/postgres/data:/var/lib/postgresql/data"
 ```
 
 Dobbiamo però anche definire il database interno, in modo che sia accessibile dal server Synapse.
@@ -170,15 +170,15 @@ enable_registration_without_verification: true
 
 listeners:  
 - port: 8008    
-	tls: false    
-	type: http    
-	x_forwarded: true    
-	resources:      
-	- names: [client, federation]        
-      compress: false
+    tls: false    
+    type: http    
+    x_forwarded: true    
+    resources:      
+      - names: [client, federation]        
+        compress: false
 
 retention:  
-	enabled: true
+  enabled: true
 
 federation_ip_range_blacklist:
   - '127.0.0.0/8'
@@ -192,8 +192,8 @@ federation_ip_range_blacklist:
   - 'fc00::/7'
   
 database:  
-	name: psycopg2  
-	args:    
+      name: psycopg2  
+      args:    
       user: synapse    
       password: INSERIRE_PASSWORD    
       database: synapse    
@@ -202,8 +202,8 @@ database:
       cp_max: 10
       
 # app_service_config_files:  
-	# /bridges/whatsapp/registration.yaml
-	# /bridges/telegram/registration.yaml
+  # /bridges/whatsapp/registration.yaml
+  # /bridges/telegram/registration.yaml
 	
 # turn_uris: [ "turn:turn.NOME_DOMINIO?transport=udp", "turn:turn.NOME_DOMINIO?transport=tcp", "turns:turn.NOME_DOMINIO?transport=udp", "turns:turn.NOME_DOMINIO?transport=tcp" ]
 # turn_shared_secret: "INSERIRE_SECRET"
@@ -244,8 +244,8 @@ Adesso impostiamo il Reverse Proxy **Nginx**, anche qui si definisce il containe
 ```yaml
 
 server {  
-	listen         80 default_server;  
-	server_name    matrix.NOME_DOMINIO;
+  listen         80 default_server;  
+  server_name    matrix.NOME_DOMINIO;
 	
  location /_matrix {
    proxy_pass http://matrix-synapse:8008;
@@ -279,11 +279,11 @@ Creiamo quindi un’istanza
 
 ```yaml
   coturn:    
-  image: "instrumentisto/coturn:latest"    
-  container_name: 'coturn'    
-  restart: "unless-stopped"    
-  network_mode: "host"    
-  volumes:      
+    image: "instrumentisto/coturn:latest"    
+    container_name: 'coturn'    
+    restart: "unless-stopped"    
+    network_mode: "host"    
+    volumes:      
       - "./matrix/coturn:/etc/coturn"
 ```
 
@@ -328,13 +328,13 @@ Definiamo un container con il bridge mautrix apposito
 
 ```yaml
 whatsapp:    
-	container_name: whatsapp    
-	image: dock.mau.dev/mautrix/whatsapp    
-	restart: unless-stopped    
-	networks:      
-      - matrix    
-	volumes:    
-      - ./matrix/bridges/whatsapp:/data
+  container_name: whatsapp    
+  image: dock.mau.dev/mautrix/whatsapp    
+  restart: unless-stopped    
+  networks:
+    - matrix    
+  volumes:    
+    - ./matrix/bridges/whatsapp:/data
 ```
 
 e lo eseguiamo una sola volta, con `docker compose create whatsapp`, in modo da generare automaticamente il file `./matrix/bridges/whatsapp/config.yaml`.
@@ -364,12 +364,12 @@ Ripetiamo il processo fatto con Whatsapp:
 
 ```yaml
   telegram:    
-  container_name: telegram    
-  image: dock.mau.dev/mautrix/telegram    
-  restart: unless-stopped    
-  networks:      
+    container_name: telegram    
+    image: dock.mau.dev/mautrix/telegram    
+    restart: unless-stopped    
+    networks:      
       - matrix    
-  volumes:    
+    volumes:    
       - ./matrix/bridges/telegram:/data
 ```
 
@@ -400,8 +400,8 @@ Aggiungiamo adesso i due file registration alla configurazione Synapse editando 
 
 ```yaml
 app_service_config_files:
-	-  /bridges/whatsapp/registration.yaml
-	-  /bridges/telegram/registration.yaml
+  -  /bridges/whatsapp/registration.yaml
+  -  /bridges/telegram/registration.yaml
 ```
 
 Infine si riavvia Synapse con `docker compose restart synapse` e avremo finito di configurare l’infrastruttura Matrix.
@@ -435,29 +435,30 @@ Possiamo anche definire un semplice **WebClient Element** accessibile da browser
 
 ```yaml
   element:    
-  container_name: 'element'    
-  image: "vectorim/element-web:latest"    
-  restart: "unless-stopped"    
-  networks:      
-  - matrix    
-  volumes:      
-  - "./matrix/element/config.json:/app/config.json:ro"    
-  labels:      
-  - "traefik.enable=true"      
-  - "traefik.http.services.element.loadbalancer.server.port=80"      
-  - "traefik.http.routers.element.rule=Host(`chat.${NOME_DOMINIO}`)"      
-  - "traefik.http.routers.element.entrypoints=websecure"      
-  - "traefik.http.routers.element.tls.certresolver=letsencrypt"
+    container_name: 'element'    
+    image: "vectorim/element-web:latest"    
+    restart: "unless-stopped"    
+    networks:      
+      - matrix    
+    volumes:      
+      - "./matrix/element/config.json:/app/config.json:ro"    
+    labels:      
+      - "traefik.enable=true"      
+      - "traefik.http.services.element.loadbalancer.server.port=80"      
+      - "traefik.http.routers.element.rule=Host(`chat.${NOME_DOMINIO}`)"      
+      - "traefik.http.routers.element.entrypoints=websecure"      
+      - "traefik.http.routers.element.tls.certresolver=letsencrypt"
 ```
 
 avviamo una volta `docker compose create element`, sostituiamo la seguente opzione nel file `./matrix/element/config.json` e riavviamo con `docker compose restart element`:
 
 ```json
 {    
-	"default_server_config": {        
-      "m.homeserver": {            
-      	"base_url": "https://matrix.NOME_DOMINIO"     
-      }
+  "default_server_config": {        
+    "m.homeserver": {            
+      "base_url": "https://matrix.NOME_DOMINIO"     
+    }
+  }
 }
 ```
 
