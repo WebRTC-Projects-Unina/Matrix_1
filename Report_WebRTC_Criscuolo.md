@@ -55,8 +55,8 @@ services:
   traefik:    
   image: traefik:latest    
   container_name: traefik    
-  networks:      
-      - matrix
+  networks:
+    - matrix
   command:
     - --providers.docker=true      
     - --providers.docker.exposedByDefault=false      
@@ -77,9 +77,9 @@ services:
     - --entryPoints.websecure.http.tls.domains[0].sans=*.${NOME_DOMINIO}      
     - --serversTransport.insecureSkipVerify=true      
     - --global.sendAnonymousUsage=false    
-		volumes:      
-			- '/var/run/docker.sock:/var/run/docker.sock:ro'      
-			- './data/traefik/acme:/etc/traefik/acme'
+    volumes:
+		- '/var/run/docker.sock:/var/run/docker.sock:ro'      
+      	- './data/traefik/acme:/etc/traefik/acme'
     restart: always    
     ports:      
     - "80:80"      
@@ -100,7 +100,7 @@ Data la natura open source di Matrix, esistono differenti server: in questo caso
 Inanzitutto, è necessario un database: creiamo quindi un’istanza di **Postgres**:
 
 ```yaml
-  postgres:    
+postgres:    
   container_name: 'postgres'    
   image: "postgres:11.4"        
   restart: "unless-stopped"    
@@ -175,7 +175,7 @@ listeners:
 	x_forwarded: true    
 	resources:      
 	- names: [client, federation]        
-		compress: false
+      compress: false
 
 retention:  
 	enabled: true
@@ -194,13 +194,13 @@ federation_ip_range_blacklist:
 database:  
 	name: psycopg2  
 	args:    
-		user: synapse    
-		password: INSERIRE_PASSWORD    
-		database: synapse    
-		host: matrix-postgres       
-		cp_min: 5    
-		cp_max: 10
-		
+      user: synapse    
+      password: INSERIRE_PASSWORD    
+      database: synapse    
+      host: matrix-postgres       
+      cp_min: 5    
+      cp_max: 10
+      
 # app_service_config_files:  
 	# /bridges/whatsapp/registration.yaml
 	# /bridges/telegram/registration.yaml
@@ -332,9 +332,9 @@ whatsapp:
 	image: dock.mau.dev/mautrix/whatsapp    
 	restart: unless-stopped    
 	networks:      
-		- matrix    
+      - matrix    
 	volumes:    
-		- ./matrix/bridges/whatsapp:/data
+      - ./matrix/bridges/whatsapp:/data
 ```
 
 e lo eseguiamo una sola volta, con `docker compose create whatsapp`, in modo da generare automaticamente il file `./matrix/bridges/whatsapp/config.yaml`.
@@ -455,9 +455,9 @@ avviamo una volta `docker compose create element`, sostituiamo la seguente opzio
 ```json
 {    
 	"default_server_config": {        
-		"m.homeserver": {            
-			"base_url": "https://matrix.NOME_DOMINIO"     
-		}
+      "m.homeserver": {            
+      	"base_url": "https://matrix.NOME_DOMINIO"     
+      }
 }
 ```
 
