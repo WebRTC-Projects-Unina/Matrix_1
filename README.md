@@ -21,4 +21,5 @@ Tramite la configurazione di più componenti:
 - Server Matrix con **Synapse**.
 - Reverse Proxy con **Nginx** per la federazione.
 - TURN Server con **Coturn**.
+
 ho quindi creato un'istanza server https://matrix.pakisrv.com, accessibile da client nativi quali Element ed Element X o dal client https://chat.pakisrv.com.
